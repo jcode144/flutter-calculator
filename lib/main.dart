@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 void main() {
   runApp(const CalculatorApp());
@@ -10,9 +9,9 @@ class CalculatorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const CalculatorScreen(),
+      home: CalculatorScreen(),
     );
   }
 }
@@ -33,7 +32,22 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       if (value == 'C') {
         expression = '';
         displayText = '0';
-      } else if (value == '=') {
+      } 
+      else if (value == 'x²') {
+        try {
+          if (expression.isEmpty) return;
+
+          double number = double.parse(expression);
+          double result = number * number;
+
+          displayText = '$expression x² = $result';
+          expression = result.toString();
+        } catch (e) {
+          displayText = 'Error';
+          expression = '';
+        }
+      } 
+      else if (value == '=') {
         try {
           double result = evaluateExpression(expression);
           displayText = '$expression = $result';
@@ -42,7 +56,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           displayText = 'Error';
           expression = '';
         }
-      } else {
+      } 
+      else {
         expression += value;
         displayText = expression;
       }
@@ -118,24 +133,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         }
       }
     }
-
     return stack.single;
   }
 
   Widget buildButton(String text,
-      {Color color = Colors.black, Color bgColor = Colors.grey}) {
+      {Color bgColor = Colors.grey}) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(6),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor,
+            foregroundColor: Colors.black,
             padding: const EdgeInsets.all(20),
           ),
           onPressed: () => onButtonPressed(text),
           child: Text(
             text,
-            style: TextStyle(fontSize: 22, color: color),
+            style: const TextStyle(fontSize: 22),
           ),
         ),
       ),
@@ -147,7 +162,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Calculator - Jackson'),
+        title: const Text('Calculator - Your Name'),
         centerTitle: true,
       ),
       body: Column(
@@ -169,7 +184,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
           const Divider(color: Colors.white),
 
-          // Buttons
           Expanded(
             child: Column(
               children: [
@@ -200,9 +214,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 Row(
                   children: [
                     buildButton('0'),
-                    buildButton('C', bgColor: Colors.red),
+                    buildButton('x²', bgColor: Colors.blue),
                     buildButton('=', bgColor: Colors.green),
                     buildButton('+', bgColor: Colors.orange),
+                  ],
+                ),
+                Row(
+                  children: [
+                    buildButton('C', bgColor: Colors.red),
                   ],
                 ),
               ],
